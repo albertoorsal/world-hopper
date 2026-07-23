@@ -13,10 +13,18 @@ Game Game_Init(void)
     InitWindow(SCREEN_W, SCREEN_H, "World Hopper");
     SetTargetFPS(TARGET_FPS);
     SetRandomSeed((unsigned int)time(NULL));
+    
+    // Drawing Star
+    Image image = LoadImage("resources/star.png");
+    ImageResize(&image, 25,25);
+    // Texture2D star = LoadTexture("resources/star.png");
+    Texture2D starTexture = LoadTextureFromImage(image);
 
     Game game = {0};
     Vector2 center = {WORLD_W / 2.0f, WORLD_H / 2.0f};
     game.player = Player_Create(center);
+    game.star = starTexture;
+    
 
     game.camera = (Camera2D) {
         .target = game.player.position,
@@ -54,11 +62,14 @@ static void Game_Draw(const Game *game)
 {
     BeginDrawing();
     ClearBackground((Color){ 30, 30, 40, 255 });
+
+    
  
     BeginMode2D(game->camera);
         World_Draw();
         Player_Draw(&game->player);
-        
+        // DrawTextureV(game->star, (Vector2) {25, 25}, WHITE);
+        DrawTextureEx(game->star, (Vector2){25, 25}, 0.0f, 2.0f, WHITE);
     EndMode2D();
  
     Game_DrawHUD(game);

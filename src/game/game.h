@@ -8,6 +8,7 @@ typedef struct Game {
     Player   player;
     Camera2D camera;
 
+    Texture2D star;
 } Game;
 
 Game Game_Init(void);
