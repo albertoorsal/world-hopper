@@ -1,5 +1,6 @@
 #include "player/player.h"
 #include "config/config.h"
+#include "world/world.h"
 #include "raymath.h"
 
 
@@ -29,11 +30,12 @@ static Vector2 ReadInput(void) {
 
 
 
-// Mantain player inside the world limits
+// Mantain player inside the world limits (and off the border line)
 static void ClampToWorld(Player *player) {
     float r = player->radius;
-    player->position.x = Clamp(player->position.x, r, WORLD_W - r);
-    player->position.y = Clamp(player->position.y, r, WORLD_H - r);
+    float min = WORLD_BORDER_THICK;
+    player->position.x = Clamp(player->position.x, r + min, WORLD_W - min - r);
+    player->position.y = Clamp(player->position.y, r + min, WORLD_H - min - r);
 }
 
 

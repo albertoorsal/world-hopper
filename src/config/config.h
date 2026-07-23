@@ -9,7 +9,7 @@
 #define SCREEN_H 800
 #define TARGET_FPS 60
 
-#define WORLD_W 800
-#define WORLD_H 800
+#define WORLD_W 1500
+#define WORLD_H 1200
 
 #endif
