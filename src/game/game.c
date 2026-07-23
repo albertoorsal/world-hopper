@@ -7,7 +7,6 @@
 /**
  * GAME LOOP Implementation
  */
-static void Game_Draw(const Game *game);
 
 Game Game_Init(void)
 {
@@ -15,31 +14,69 @@ Game Game_Init(void)
     SetTargetFPS(TARGET_FPS);
     SetRandomSeed((unsigned int)time(NULL));
 
-    Game game = { 0 };
-    game.camera.zoom = 1.0f;
+    Game game = {0};
+    Vector2 center = {WORLD_W / 2.0f, WORLD_H / 2.0f};
+    game.player = Player_Create(center);
+
+    game.camera = (Camera2D) {
+        .target = game.player.position,
+        .offset = { SCREEN_W / 2.0f, SCREEN_H / 2.0f },
+        .rotation = 0.0f,
+        .zoom = 1.0f,
+    };
+
     return game;
 }
 
-bool Game_Frame(Game *game)
+static void Game_Update(Game *game, float dt)
 {
-    if(WindowShouldClose()) return false;
-
-    Game_Draw(game);
-    return true;
+    Player_Update(&game->player, dt);
+    game->camera.target = game->player.position;
 }
 
-void Game_Shutdown(Game *game)
+static void Game_DrawHUD(const Game *game)
 {
-    (void) game;
-    CloseWindow();
+    // Display players controls
+    DrawText("Move with WASD and arrows", 10, 10, 20, RAYWHITE);
+    
+    // Display Current Position of the player (x,y)
+    DrawText(
+        TextFormat("Pos: %.0f, %.0f",
+            game->player.position.x, game->player.position.y),10, 35, 20, LIGHTGRAY
+        );
+
+    // Draw FPs
+    DrawFPS(SCREEN_W - 90, 10);
 }
+
 
 static void Game_Draw(const Game *game)
 {
     BeginDrawing();
     ClearBackground((Color){ 30, 30, 40, 255 });
+ 
     BeginMode2D(game->camera);
-    World_Draw();
+        World_Draw();
+        Player_Draw(&game->player);
+        
     EndMode2D();
+ 
+    Game_DrawHUD(game);
+ 
     EndDrawing();
+}
+
+bool Game_Frame(Game *game) {
+    if (WindowShouldClose()) return false;
+
+    Game_Update(game, GetFrameTime());
+    Game_Draw(game);
+    return true;
+}
+
+
+void Game_Shutdown(Game *game)
+{
+    (void) game;
+    CloseWindow();
 }

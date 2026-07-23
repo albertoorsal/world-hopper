@@ -2,12 +2,8 @@
 #include "config/config.h"
 
 /**
- *  WORLD IMPLEMENTATION 
+ *  WORLD IMPLEMENTATION
 */
-static void DrawBlack(void) {
-
-}
-
 
 static void DrawBorder(void) {
     Rectangle bounds = { 0, 0, WORLD_W, WORLD_H};

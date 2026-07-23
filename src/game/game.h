@@ -2,9 +2,12 @@
 #define GAME_H
 
 #include "raylib.h"
+#include "player/player.h"
 
 typedef struct Game {
+    Player   player;
     Camera2D camera;
+
 } Game;
 
 Game Game_Init(void);
